@@ -9,8 +9,8 @@ end
 
 ＊＊「post 'posts', to: 'posts#create'」の解説＊＊
 
-HTTP POSTリクエストが「/posts」URLに送信されたときに、「PostsController」の「create」アクションが呼び出されることを意味しています。これにより、新しい投稿を作成するためのルーティングが設定されます。
-
+HTTP POSTリクエストが「/posts」URLに送信されたときに、「PostsController」の「create」アクションが呼び出されることを意味しています。
+これにより、新しい投稿を作成するためのルーティングが設定されます。
 
 1. post: HTTPメソッドが「POST」であることを指定しています（主にフォームからのデータ送信やリソースの作成に使われます）。
 
