@@ -1,0 +1,64 @@
+<h1>AjaxApp</h1>
+<%= form_with url: "/posts", method: :post, id: "form" do |form| %>
+<%= form.text_field :content%>
+<%= form.submit '投稿する', id: "submit" %>
+<% end %>
+
+
+<% @posts.each do |post| %>
+  <div class="post">
+    <div class="post-date">
+      投稿日時:  <%= post.created_at %>
+    </div>
+    <div class="post-content">
+      <%= post.content %>
+    </div>
+  </div>
+<% end %>
+
+
+
+
+<%#
+
+
+1. 現在のコード（url と method を直接指定）
+
+　「form_with url: "/posts", method: :post, id: "form" do |form|」
+
+この書き方は、「どこに」「どの方法で」データを送るかを直接指定（命令）するアプローチです。
+
+・「url: "/posts"」: フォームの送信先URLを /posts に指定しています。
+
+・「method: :post」: HTTPメソッドを POST に指定しています。
+
+・特徴: routes.rb で設定した post 'posts', to: 'posts#create' に対して、直接的に「ここに送れ！」と指示を出しています。
+       モデル（データベースの設計図）とは直接関係のない、例えば「サイト内検索フォーム」などを作る際によく使われます。
+
+
+2. model オプションを使ったバージョン
+Railsの開発でより一般的なのは、対象となるモデルのデータ（インスタンス）を渡して、Railsに設定を「お任せ」する書き方です。
+
+コントローラー（posts_controller.rb の index アクションなど）で、
+@post = Post.new のように新しい空のデータが準備されていると仮定すると、以下のように書けます。
+
+　「form_with model: @post, id: "form" do |form|」
+
+この書き方は、Railsのルーティングとモデルの規約に従って、フォームの送信先URLやHTTPメソッドを自動的に決定します。
+「このデータ（@post）をよしなに処理して!」とRailsにお任せするアプローチです。
+
+Railsの自動推測機能: Railsは渡された @post の中身を見て、以下を自動的に判断します。
+中身が空（新規作成）なら: 自動的に url を /posts に、method を POST に設定してくれます（つまり、今のコードと全く同じ動作になります）。
+中身が既存データ（編集・更新）なら: 自動的に url を /posts/1 のように特定のIDに向け、method を PATCH（更新）に切り替えてくれます。
+
+
+
+📊 2つの書き方の比較まとめ
+
+比較ポイント	                   今回の書き方 (url, method 指定)	                    model オプションを使った書き方
+考え方	                            手動で送信先とメソッドを指定する	               モデルを渡してRailsに自動判断させる
+使い所	               モデルに紐付かないフォーム（検索フォーム、ログインフォームなど） 	データベース（モデル）にデータを保存・更新するフォーム
+メリット	                          自由に送信先を設定できる	                      新規作成と編集で同じフォームのコードを使い回せる
+送られるデータ	                 params[:content] のように直接送られる	           params[:post][:content] のように、モデル名でまとめられて送られる
+
+%>
